@@ -29,6 +29,8 @@ define([
 			this.BOND_COUNT = 0;
 			this.board = this.buildJSXBoard();
 
+			this.buildSelector();
+
 			$(document).bind('keyup', $.proxy(this.handleKeyPress, this));
 		},
 
@@ -61,7 +63,6 @@ define([
 			board.addGrid();
 
             var jsxView = new JsxView({board:board});
-
 			return board;
 		},
 
@@ -93,6 +94,61 @@ define([
 		//         break;
 		//     }
 		// }
+
+		buildSelector : function() {
+			var self = this;
+
+			$("#selector").autocomplete({
+				minLength: 1,
+				// source: _.map(this.elements, function(element) {
+				// 	return $.extend({}, element, {
+				// 		label: element.name,
+				// 		value: element.atomic_number
+				// 	});
+				// }),
+				source: function(request, response) {
+					// debugger;
+					var matches = _.filter(self.elements, function(element) {
+						var term   = request.term.toLowerCase(),
+							symbol = element.symbol.toLowerCase(),
+							name   = element.name.toLowerCase();
+						return symbol.indexOf(term) !== -1 || name.indexOf(term) !== -1;
+					});
+
+					response(_.map(matches, function(element) {
+						return $.extend({}, element, {
+							label: element.name,
+							value: element.atomic_number
+						});
+					}));
+				},
+				focus: function(event, ui) {
+					$("#selector").val( ui.item.label );
+					return false;
+				},
+				select: function(event, ui) {
+					$("#selector").val( ui.item.label );
+					console.log(ui.item.label);
+					return false;
+				}
+			})
+			.data("ui-autocomplete")._renderItem = function(ul, item) {
+				var $li = $("<li>")
+						.append('<a><div class="row"></div></a>'),
+					$icon = $('<span>')
+						.text(item.symbol)
+						.addClass('icon')
+						.css({
+							'border': '2px solid ' + item.stroke_color,
+							'background-color': item.color
+						}),
+					$name = $('<span>')
+						.text(item.name)
+						.addClass('name');
+				$li.find('.row').append($icon, $name);
+				return $li.appendTo(ul);
+			};
+		}
 	});
 
 	// Mix in the event manager functionality

@@ -5,6 +5,7 @@ require.config({
 		json:         'lib/requirejs-plugins/json',
 		JXG:          'lib/jsxgraphcore.min',
 		jQuery:       'lib/jquery-1.9.1.min',
+		jQueryUI:     'lib/jquery-ui-1.10.1.custom.min',
 		Underscore:   'lib/underscore.min',
 		Backbone:     'lib/backbone.min'
 	},
@@ -18,6 +19,9 @@ require.config({
 		},
 		'jQuery': {
 			exports: '$'
+		},
+		'jQueryUI': {
+			deps:    ['jQuery']
 		},
 		'Underscore': {
 			exports: '_'

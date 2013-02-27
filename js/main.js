@@ -3,7 +3,8 @@ require(['config/config'],
     require([
         'jQuery',
         'router/root',
-        'Backbone'
+        'Backbone',
+        'jQueryUI'
     ], function($, Router, Backbone) {
         Backbone.history.start();
     });
